@@ -1,0 +1,59 @@
+md5                     7906dc475a8ae55ffb5af7fd3ac8f10a
+sha1                    e7304e2436dc0eddddba229f1ec7145055030151
+sha256                  1814a6a6749684cdacd792374e0ba31b7be4ff6f9675f3fd15d543afbb540367
+path                    1814a6a6749684cdacd792374e0ba31b7be4ff6f9675f3fd15d543afbb540367.exe
+timestamp               2021-11-03T18:25:20.009522
+capa version            v3.0.3-0-g29e61e2
+os                      windows
+format                  pe
+arch                    amd64
+extractor               VivisectFeatureExtractor
+base address            0x140000000
+rules                   /tmp/_MEIc5lH4B/rules
+function count          3
+library function count  0
+total feature count     706
+
+execute syscall instruction
+namespace    anti-analysis
+author       @kulinacs, @mr-tz
+description  may be used to evade hooks or hinder analysis
+scope        basic block
+references   https://github.com/j00ru/windows-syscalls
+basic block @ 0x1400010B6 in function 0x1400010B6
+  and:
+    mnemonic: syscall @ 0x1400010BE
+    or:
+      mnemonic: ret @ 0x1400010C0
+
+encode data using XOR
+namespace  data-manipulation/encoding/xor
+author     moritz.raabe@mandiant.com
+scope      basic block
+att&ck     Defense Evasion::Obfuscated Files or Information [T1027]
+mbc        Defense Evasion::Obfuscated Files or Information::
+			Encoding-Standard Algorithm [E1027.m02], 
+			Data::Encode Data::XOR [C0026.002]
+examples   2D3EDC218A90F03089CC01715A9F047F:0x403D7E
+basic block @ 0x140001059 in function 0x140001000
+  and:
+    characteristic: tight loop @ 0x140001059
+    characteristic: nzxor @ 0x140001062
+    not: = filter for potential false positives
+      or:
+        or: = unsigned bitwise negation operation (~i)
+          number: 0xFFFFFFFF = bitwise negation for unsigned 32 bits
+          number: 0xFFFFFFFFFFFFFFFF = bitwise negation for unsigned 64 bits
+        or: = signed bitwise negation operation (~i)
+          number: 0xFFFFFFF = bitwise negation for signed 32 bits
+          number: 0xFFFFFFFFFFFFFFF = bitwise negation for signed 64 bits
+        or: = Magic constants used in the implementation of strings functions.
+          number: 0x7EFEFEFF = optimized string constant for 32 bits
+          number: 0x81010101 = -0x81010101 = 0x7EFEFEFF
+          number: 0x81010100 = 0x81010100 = ~0x7EFEFEFF
+          number: 0x7EFEFEFEFEFEFEFF = optimized string constant for 64 bits
+          number: 0x8101010101010101 = -0x8101010101010101 = 0x7EFEFEFEFEFEFEFF
+          number: 0x8101010101010100 = 0x8101010101010100 = ~0x7EFEFEFEFEFEFEFF
+
+
+
